@@ -23,12 +23,11 @@ Copy the example environment file:
 cp .env.example .env
 ```
 
-Update `.env` with your Azure OpenAI and Azure Search configuration:
+Update `.env` with your Azure OpenAI and Azure AI Foundary configuration:
 
 ```
 AZURE_OPENAI_ENDPOINT=https://xxxxxx.openai.azure.com/
 AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=gpt-4o
-AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME=text-embedding-ada-002
 AZURE_OPENAI_API_KEY=xxxxxxxxxxx
 AZURE_OPENAI_API_VERSION=2025-03-01-preview
 ```
