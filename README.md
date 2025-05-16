@@ -3,8 +3,8 @@
 ## ✅ Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
+[git clone https://github.com/your-username/your-repo-name.git](https://github.com/lokesh-keyan/semantic-kernal-app.git)
+cd semantic-kernal-app
 ```
 
 ## ✅ Step 2: Install Dependencies
