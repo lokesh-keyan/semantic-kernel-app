@@ -1,4 +1,3 @@
-# kernel_setup.py
 from semantic_kernel.kernel import Kernel
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 

@@ -1,7 +1,6 @@
 import os
 from dotenv import load_dotenv
 
-
 def load_env_vars() -> None:
     """Load and validate required environment variables."""
     load_dotenv()
