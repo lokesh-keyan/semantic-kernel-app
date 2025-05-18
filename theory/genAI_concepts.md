@@ -104,3 +104,32 @@ When using an LLM (like GPT-4), you interact with a **smart service** that:
 | "I’m using GPT-4"  | You're sending input to a service running the GPT-4 model |
 | "LLM answers me"   | The model is predicting and returning the next tokens     |
 | "It's smart"       | It's trained to guess next words based on context         |
+
+# Explanation of Training Large Language Models (LLMs) with Transformers
+
+Large Language Models (LLMs) like GPT are built using **transformers**, a powerful neural network architecture designed for understanding and generating human language.
+
+## How Training Works
+
+- The training data consists of many sentences where, during training, the model is fed the sentence **without the last word**.  
+- The goal of the model is to **predict the missing last word** based on the context provided by the previous words.
+
+For example, the input might be:  
+`"I went to the river ___"`  
+The model learns to predict the missing word `"bank"` by understanding the sentence context.
+
+## Role of Transformers and Vectors
+
+- Transformers represent words as **vectors** in a high-dimensional space.
+- These vectors are **contextual**, meaning the vector for a word changes depending on the words around it.  
+- For example, the word `"bank"` has different meanings:  
+  - **River bank** (the side of a river)  
+  - **Financial bank** (money institution)  
+
+The transformer creates different vectors for `"bank"` depending on the preceding words (`"river"` vs. `"money"`), enabling it to understand the meaning from context.
+
+## Predicting the Missing Word
+
+- When predicting the missing word, the transformer uses the context vectors to compare possible candidates.  
+- It picks the word whose vector fits best with the previous context vectors.  
+- This process allows the model to generate coherent and contextually accurate text.
