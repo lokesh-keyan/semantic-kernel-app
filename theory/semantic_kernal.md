@@ -61,5 +61,3 @@ Plugins are collections of related functions grouped as **skills**.
 - Build complex AI apps easily and maintainably.
 
 ---
-
-If you want, I can provide code examples for creating and using semantic functions or plugins!
