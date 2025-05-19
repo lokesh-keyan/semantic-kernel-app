@@ -113,7 +113,9 @@ Large Language Models (LLMs) like GPT are built using **transformers**, a powerf
 
 - The training data consists of many sentences where, during training, the model is fed the sentence **without the last word**.  
 - The goal of the model is to **predict the missing last word** based on the context provided by the previous words.
-
+- It estimates the number of words, assigns weights to them, and selects the top-ranked word.
+- Depending on the guessed word, we adjust the parameters to give the best result for us.
+  
 For example, the input might be:  
 `"I went to the river ___"`  
 The model learns to predict the missing word `"bank"` by understanding the sentence context.
