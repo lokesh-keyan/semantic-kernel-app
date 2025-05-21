@@ -10,7 +10,7 @@ from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.azure_chat_
 )
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 
-async def run_weather_report_plugin(kernel: Kernel, chat_completion: AzureChatCompletion):
+async def run_weather_report_plugin(kernel: Kernel, chat_completion: AzureChatCompletion, user_message: str = "What's the weather like in Tokyo and are there any alerts?"):
     # Create the plugin
     weather_plugin = WeatherPlugin()
 
@@ -22,7 +22,7 @@ async def run_weather_report_plugin(kernel: Kernel, chat_completion: AzureChatCo
 
     # Test with a user query
     history = ChatHistory()
-    history.add_user_message("What's the weather like in Tokyo and are there any alerts?")
+    history.add_user_message(user_message)
 
     # Get response using function calling
     execution_settings = AzureChatPromptExecutionSettings()
