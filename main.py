@@ -1,3 +1,4 @@
+from agents.multi_turn_agent import multi_turn_agent_example
 from agents.simple_agent import simple_agent_example
 from agents.specialized_agent import specialized_agent_example
 from config.env_loader import load_env_vars
@@ -29,9 +30,10 @@ def main():
     # user_message = "What's the weather like in Tokyo and are there any alerts?"
     # asyncio.run(run_weather_report_plugin(kernel, chat_completion, user_message))
 
-    asyncio.run(simple_agent_example())
+    # asyncio.run(simple_agent_example())
 
-    asyncio.run(specialized_agent_example())
+    # asyncio.run(specialized_agent_example())
+    asyncio.run(multi_turn_agent_example())
 
 if __name__ == "__main__":
     main()
