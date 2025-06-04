@@ -1,3 +1,5 @@
+from agents.agent_plugin import notes_agent_example
+from agents.keeping_length_in_check import keeping_length_in_check_example
 from agents.multi_turn_agent import multi_turn_agent_example
 from agents.simple_agent import simple_agent_example
 from agents.specialized_agent import specialized_agent_example
@@ -33,7 +35,9 @@ def main():
     # asyncio.run(simple_agent_example())
 
     # asyncio.run(specialized_agent_example())
-    asyncio.run(multi_turn_agent_example())
+    # asyncio.run(multi_turn_agent_example())
+    # asyncio.run(keeping_length_in_check_example())
+    asyncio.run(notes_agent_example())
 
 if __name__ == "__main__":
     main()
