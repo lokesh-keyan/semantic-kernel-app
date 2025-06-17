@@ -61,7 +61,7 @@ async def notes_agent_example():
     # Initialize the agent with AzureChatCompletion and the NotesPlugin
     agent = ChatCompletionAgent(
         service=AzureChatCompletion(),
-        kernel=kernel,
+        #kernel=kernel,
         name="notes_assistant",
         instructions="You are a helpful assistant.",
         plugins=[NotesPlugin()],

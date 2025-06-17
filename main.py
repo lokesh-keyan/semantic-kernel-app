@@ -13,10 +13,9 @@ from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 from plugin_orchestrator import run_weather_report_plugin
 
 def main():
-    load_env_vars()
-    # chat_completion = AzureChatCompletion()
-    # kernel = create_kernel(chat_completion)
-    # functions = add_all_functions(kernel)
+    chat_completion = AzureChatCompletion()
+    kernel = create_kernel(chat_completion)
+    functions = add_all_functions(kernel)
 
     # # Run the functions individually
     # orchestrator = SemanticOrchestrator(kernel, functions)
@@ -28,7 +27,7 @@ def main():
     # """
     # asyncio.run(orchestrator.run_all(text))
 
-    # # Run the weather report plugin
+    # Run the weather report plugin
     # user_message = "What's the weather like in Tokyo and are there any alerts?"
     # asyncio.run(run_weather_report_plugin(kernel, chat_completion, user_message))
 
