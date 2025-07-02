@@ -34,7 +34,7 @@ try:
         api_key=os.getenv("AZURE_OPENAI_API_KEY"),  
         api_version=os.getenv("AZURE_OPENAI_API_VERSION"),  
     )  
-    _emb_model = os.getenv("AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME")  
+    _emb_model = os.getenv("AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME")   #Check what this is set to in your .env file, e.g. "text-embedding-3-small" or "text-embedding-3-large"
   
     def get_embedding(text: str) -> List[float]:
         text = text.replace("\n", " ")
@@ -195,3 +195,29 @@ class SubscriptionIdParam(BaseModel):
   
 class InvoiceIdParam(BaseModel):  
     invoice_id: int  
+
+
+@mcp.tool(description="List all customers with basic info")  
+def get_all_customers() -> List[CustomerSummary]:  
+    db = get_db()  
+    rows = db.execute(  
+        "SELECT customer_id, first_name, last_name, email, loyalty_level FROM Customers"  
+    ).fetchall()  
+    db.close()  
+    return [CustomerSummary(**dict(r)) for r in rows]  
+  
+  
+@mcp.tool(description="Get a full customer profile including their subscriptions")  
+def get_customer_detail(params: CustomerIdParam) -> CustomerDetail:  
+    db = get_db()  
+    cust = db.execute(  
+        "SELECT * FROM Customers WHERE customer_id = ?", (params.customer_id,)  
+    ).fetchone()  
+    if not cust:  
+        db.close()  
+        raise ValueError(f"Customer {params.customer_id} not found")  
+    subs = db.execute(  
+        "SELECT * FROM Subscriptions WHERE customer_id = ?", (params.customer_id,)  
+    ).fetchall()  
+    db.close()  
+    return CustomerDetail(**dict(cust), subscriptions=[dict(s) for s in subs])  
