@@ -34,7 +34,7 @@ try:
         api_key=os.getenv("AZURE_OPENAI_API_KEY"),  
         api_version=os.getenv("AZURE_OPENAI_API_VERSION"),  
     )  
-    _emb_model = os.getenv("AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME")   #Check what this is set to in your .env file, e.g. "text-embedding-3-small" or "text-embedding-3-large"
+    _emb_model = os.getenv("AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME")
   
     def get_embedding(text: str) -> List[float]:
         text = text.replace("\n", " ")
@@ -45,7 +45,7 @@ except Exception:  # pragma: no cover
         # 1536‑d zero vector falls back when creds are missing (tests/dev mode)  
         return [0.0] * 1536
   
-  
+
 def cosine_similarity(vec1, vec2):
     dot = sum(a * b for a, b in zip(vec1, vec2))
     norm1 = math.sqrt(sum(a * a for a in vec1))
@@ -221,3 +221,70 @@ def get_customer_detail(params: CustomerIdParam) -> CustomerDetail:
     ).fetchall()  
     db.close()  
     return CustomerDetail(**dict(cust), subscriptions=[dict(s) for s in subs])  
+
+@mcp.tool(  
+    description=(  
+        "Detailed subscription view → invoices (with payments) + service incidents."  
+    )  
+)  
+def get_subscription_detail(params: SubscriptionIdParam) -> SubscriptionDetail:  
+    db = get_db()  
+    sub = db.execute(  
+        """  
+        SELECT s.*, p.name AS product_name, p.description AS product_description,  
+               p.category, p.monthly_fee  
+        FROM Subscriptions s  
+        JOIN Products p ON p.product_id = s.product_id  
+        WHERE s.subscription_id = ?  
+        """,  
+        (params.subscription_id,),  
+    ).fetchone()  
+    if not sub:  
+        db.close()  
+        raise ValueError("Subscription not found")  
+  
+    # invoices + nested payments  
+    invoices_rows = db.execute(  
+        """  
+        SELECT invoice_id, invoice_date, amount, description, due_date  
+        FROM Invoices WHERE subscription_id = ?""",  
+        (params.subscription_id,),  
+    ).fetchall()  
+  
+    invoices: List[Invoice] = []  
+    for inv in invoices_rows:  
+        pay_rows = db.execute(  
+            "SELECT * FROM Payments WHERE invoice_id = ?", (inv["invoice_id"],)  
+        ).fetchall()  
+        total_paid = sum(p["amount"] for p in pay_rows if p["status"] == "successful")  
+        invoices.append(  
+            Invoice(  
+                **dict(inv),  
+                payments=[Payment(**dict(p)) for p in pay_rows],  
+                outstanding=max(inv["amount"] - total_paid, 0.0),  
+            )  
+        )  
+  
+    # service incidents  
+    inc_rows = db.execute(  
+        """  
+        SELECT incident_id, incident_date, description, resolution_status  
+        FROM ServiceIncidents  
+        WHERE subscription_id = ?""",  
+        (params.subscription_id,),  
+    ).fetchall()  
+  
+    db.close()  
+    return SubscriptionDetail(  
+        **dict(sub),  
+        invoices=invoices,  
+        service_incidents=[ServiceIncident(**dict(r)) for r in inc_rows],  
+    )  
+  
+  
+@mcp.tool(description="Return invoice‑level payments list")  
+def get_invoice_payments(params: InvoiceIdParam) -> List[Payment]:  
+    db = get_db()  
+    rows = db.execute("SELECT * FROM Payments WHERE invoice_id = ?", (params.invoice_id,)).fetchall()  
+    db.close()  
+    return [Payment(**dict(r)) for r in rows]  
